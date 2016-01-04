@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+
+<html lang="en">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
+
+  <title>Daniel Martí: Software and files</title>
+  <meta http-equiv="Content-type" content=
+  "text/html; charset=utf-8">
+  <meta content=
+  "Dani Marti, Daniel Marti, Daniel Martí, Theoretical Neuroscience, Computational Neuroscience, Paris, ENS, École Normale Supérieure, Group for Neural Theory"
+  name="keywords">
+  <meta content=
+  "Supplementary research material of Daniel Marti, a postdoctoral fellow at the Group for Neural Theory of the École Normale Supérieure in Paris."
+  name="description">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+  <style type="text/css">
+/*<![CDATA[*/
+        <!--
+                @import url("../styles/main.css");
+        -->
+  /*]]>*/
+  </style>
+</head>
+
+<body>
+  <div class="document">
+    <h1 class="nobar">Daniel Martí</h1>
+
+    <h1 id="subtitle">Software and Files</h1>
+
+    <div class="content">
+      <!-- <h2>Talks</h2> -->
+      <!-- <p>Slides I prepared for some of my presentations at journal clubs.</p>  -->
+      <!-- <ul> -->
+      <!-- <li><span class="PDFlink"><a href="sugrue_etal.pdf">Sugrue LP, Corrado GS, Newsome WT, Science 2004</a></span></li> -->
+      <!-- <li><span class="PDFlink"><a href="fusi_etal2005.pdf">Fusi S, Drew PJ, Abbott LF, Neuron 2005</a></span></li> -->
+      <!-- <li><span class="PDFlink"><a href="romani_etal2006.pdf">Romani S, Amit DJ, Mongillo G, J Comp Neurosci 2006</a></span></li> -->
+      <!-- <li><span class="PDFlink"><a href="latham_nirenberg.pdf">Latham P, Nirenberg S, J Neurosci 2005</a></span></li> -->
+      <!-- <li><span class="PDFlink"><a href="cateau_reyes2006.pdf">C&acirc;teau H, Reyes AD, PRL 2006</a></span></li> -->
+      <!-- <li><span class="PDFlink"><a href="hanks_etal2006.pdf">Hanks TD, Ditterich J, Shadlen MN, Nat Neurosci 2006</a></span></li> -->
+      <!-- <li><span class="PDFlink"><a href="tao_etal2006.pdf">Tao L, Cai D, McLaughlin DW, Shelley MJ, Shapley R, PNAS 2006</a></span></li> -->
+      <!-- [><span class="PDFlink"> <li><a href="ma_etal2006.pdf">Ma WJ, Beck JM, Latham PE, Pouget A, Nat Neurosci 2006</a></span></li> <] -->
+      <!-- <li><span class="PDFlink"><a href="shpiro_etal2007.pdf">Shpiro A, Curtu R, Rinzel J, Rubin N, J Neurophys 2007</a></span></li> -->
+      <!-- <li><span class="PDFlink"><a href="jazayeri_movshon.pdf">Jazayeri M, Movshon A, Nature 2007</a></span></li> -->
+      <!-- <li><span class="PDFlink"><a href="murphy_miller.pdf">Murphy BK, Miller KD, Neuron 2009</a></span></li> -->
+      <!-- </ul> -->
+
+      <h2>Scripts, programs.</h2>
+
+      <p>Software and files (made by me or by others) that you
+      might find useful or interesting.</p>
+
+      <ul>
+        <li><a href="https://github.com/djmarti/network_LIF">code
+        in C of a sparse random network of leaky integrate-and-fire
+        neurons</a>, from <a href="https://github.com/djmarti/">my
+        github</a> (low volume).</li>
+
+        <li><a href="dmarti.bib">My BibTeX file</a> <?php
+                $last_modified = filemtime("dmarti.bib");
+                print "(updated on " . date("j M Y", $last_modified) . ")"; 
+            ?>.</li>
+
+        <li><a href="dayan_abbott/index.html">Solutions to a few
+        problems from Dayan &amp; Abbott</a>, using <a href=
+        "http://www.numpy.org">NumPy</a> (a free alternative to
+        matlab based on <a href=
+        "http://www.python.org">Python</a>).</li>
+
+        <li><code><a href="jack.w">jack.w</a></code> is the
+        <a href="http://www-cs-faculty.stanford.edu/~uno/cweb.html">
+        CWEB</a> code I wrote to find the optimal policy for
+        <a href=
+        "http://www.cs.ualberta.ca/~sutton/book/ebook/node43.html">Jack's
+        car rental problem</a> (example 4.2 of <a href=
+        "http://www.cs.ualberta.ca/~sutton/book/the-book.html">Sutton
+        &amp; Barto's book</a>). To convert the source file to a
+        <a href="jack.pdf">prettily-readable document (pdf)</a> run
+        first <code>cweave jack.w</code>, and compile the generated
+        <code>.tex</code> file with <code>tex jack.tex</code>.</li>
+        <!-- <li><a href="neural_computation_resize.sh">neural_computation_resize.sh</a> is a bash script I wrote to rescale and recenter the .pdfs from <a href="http://neco.mitpress.org/">Neural Computation</a>.</li>-->
+
+        <li><a href=
+        "http://www.ctan.org/tex-archive/support/latexdiff/">LaTeXdiff</a>
+        is a handy perl script by F. Tillman that marks up the
+        differences between two LaTeX files. It is now available as
+        binary package for <a href=
+        "http://packages.debian.org/source/squeeze/latexdiff">Debian</a>
+        and <a href=
+        "http://packages.ubuntu.com/lucid/latexdiff">Ubuntu</a>.</li>
+
+        <li><a href="lorenz/index.html">Visualizing the evolution
+        of chaotic systems</a> (visual sugar).</li>
+        <!-- <li>Some <a href="numpy/index.xhtml">Numpy examples</a> showing how to do simple calculations. Useful as a reminder.</li> -->
+      </ul>
+    </div>
+
+    <p class="lastlink">[<a href=
+    "http://www.iec-lnc.ens.fr/group-for-neural-theory/">Group for
+    Neural Theory</a>]</p>
+
+    <div class="foot">
+      <?php
+                $last_modified = filemtime("index.html");
+                print "Last modified " . date("j F Y ", $last_modified) . "by "; 
+        ?><a href="..">Daniel Martí</a>
+    </div>
+  </div>
+</body>
+</html>

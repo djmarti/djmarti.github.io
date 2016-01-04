@@ -1,0 +1,349 @@
+/**
+ * Based on the Sphinx stylesheet -- sphinxdoc theme
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ *
+ * Originally created by Armin Ronacher for Werkzeug, 
+ * adapted by Georg Brandl, tweaked by Dani M.
+ *
+ */
+
+/* -- page layout ---------------------------------------- */
+
+body {
+    font-family: sans-serif;
+    letter-spacing: 0.01em;
+    line-height: 120%;
+    font-size: 100%;
+    text-align: center;
+    background-color: white;
+    color: black;
+    padding: 0;
+    margin: 0;
+    /* border: 1px solid #aaa; */
+    /* margin: 10px 40px 10px 40px; */
+    max-width: 800px;
+}
+
+div.documentwrapper {
+    float: none;
+}
+
+img {
+    border: 0;
+    padding: 0;
+}
+
+div.document {
+    background-color: white;
+    padding: 20px;
+    width: 800px;
+    text-align: left;
+}
+
+div.bodywrapper {
+    margin: 0 240px 0 0;
+    border-right: 1px solid #ccc;
+}
+
+div.body {
+    margin: 0;
+    padding: 1.0em 20px 20px 20px;
+}
+
+div.related {
+    font-margin: 1em;
+}
+
+/* -- body styles ----------------------------------------------------------- */
+
+a.headerlink {
+    color: #c60f0f;
+    padding: 0 4px 0 4px;
+    text-decoration: none;
+    visibility: hidden;
+}
+
+a.headerlink:focus {
+    background-color: #c60f0f;
+    color: white;
+}
+
+h1:focus > a.headerlink,
+h2:focus > a.headerlink,
+h3:focus > a.headerlink,
+h4:focus > a.headerlink,
+h5:focus > a.headerlink,
+h6:focus > a.headerlink,
+dt:focus > a.headerlink {
+    visibility: visible;
+}
+
+div.body p.caption {
+    text-align: inherit;
+}
+
+div.body td {
+    text-align: left;
+}
+
+.field-list ul {
+    padding-left: 1em;
+}
+
+.first {
+    margin-top: 0 !important;
+}
+
+p.rubric {
+    margin-top: 30px;
+    font-weight: bold;
+}
+
+p {    
+    margin: 0.8em 0 1.2em 0;
+}
+
+a {
+    color: #355f7c;
+    text-decoration: none;
+}
+
+a:focus {
+    text-decoration: underline;
+}
+
+div.body a {
+    text-decoration: underline;
+}
+
+h1 {
+    margin: 0;
+    color: #11557C;
+    line-height: 120%;
+    padding: 1.0em 0 0.3em 0;
+    font-size: x-large;
+}
+
+h1.title {
+    padding: 0.5em 0 0.8em 0;
+    font-size: xx-large;
+}
+
+h2 {
+    margin: 2.0em 0 0.2em 0;
+    font-size: large;
+    padding: 0;
+}
+
+h3 {
+    margin: 2em 0 -0.3em 0;
+    font-size: 100%;
+}
+
+div.body h1 a, div.body h2 a, div.body h3 a, div.body h4 a, div.body h5 a, div.body h6 a {
+    color: black!important;
+}
+
+h1 a.anchor, h2 a.anchor, h3 a.anchor, h4 a.anchor, h5 a.anchor, h6 a.anchor {
+    display: none;
+    margin: 0 0 0 0.3em;
+    padding: 0 0.2em 0 0.2em;
+    color: #aaa!important;
+}
+
+h1:focus a.anchor, h2:focus a.anchor, h3:focus a.anchor, h4:focus a.anchor,
+h5:focus a.anchor, h6:focus a.anchor {
+    display: inline;
+}
+
+h1 a.anchor:focus, h2 a.anchor:focus, h3 a.anchor:focus, h4 a.anchor:focus,
+h5 a.anchor:focus, h6 a.anchor:focus {
+    color: #777;
+    background-color: #eee;
+}
+
+cite, code, tt {
+    font-family: monospace;
+    font-size: 100%;
+    letter-spacing: 0.01em;
+}
+
+tt {
+    background-color: #ecf0f3;
+    padding: 0 1px 0 1px;
+}
+
+
+tt.descname, tt.descclassname, tt.xref {
+    border: 0;
+}
+
+hr {
+    border: 1px solid #abc;
+    margin: 2em;
+}
+
+pre {
+    padding: 1.5em;
+    border: 1px solid #aaa;
+    border-left: none;
+    border-right: none;
+/*    line-height: 120%; */
+    font-size: 100%;
+    background-color: #eaeaea; 
+    overflow: auto;
+    color: #333333;
+}
+
+pre a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+table {
+    border-collapse: collapse;
+    margin: 0 -0.5em 0 -0.5em;
+}
+
+table td, table th {
+    padding: 0.2em 0.5em 0.2em 0.5em;
+}
+
+div.admonition, div.warning {
+    font-size: 0.9em;
+    margin: 1em 0 1em 0;
+    border: 1px solid #86989B;
+    background-color: #f7f7f7;
+    padding: 0;
+}
+
+div.admonition p, div.warning p {
+    margin: 0.5em 1em 0.5em 1em;
+    padding: 0;
+}
+
+div.admonition pre, div.warning pre {
+    margin: 0.4em 1em 0.4em 1em;
+}
+
+div.admonition p.admonition-title,
+div.warning p.admonition-title {
+    margin: 0;
+    padding: 0.1em 0 0.1em 0.5em;
+    color: white;
+    border-bottom: 1px solid #86989B;
+    font-weight: bold;
+    background-color: #AFC1C4;
+}
+
+div.warning {
+    border: 1px solid #940000;
+}
+
+div.warning p.admonition-title {
+    background-color: #CF0000;
+    border-bottom-color: #940000;
+}
+
+dl {
+    margin-bottom: 15px;
+}
+
+dd p {
+    margin-top: 0px;
+}
+
+dd ul, dd table {
+    margin-bottom: 10px;
+}
+
+dd {
+    margin-top: 3px;
+    margin-bottom: 10px;
+    margin-left: 30px;
+}
+
+dt:target, .highlight {
+    /* background-color: #fbe54e; */
+    background-color: #f0f0f0; 
+    font-size: 100%;
+}
+
+dl.glossary dt {
+    font-weight: bold;
+    font-size: 100%;
+}
+
+.field-list ul {
+    margin: 0;
+    padding-left: 1em;
+}
+
+.field-list p {
+    margin: 0;
+}
+
+.refcount {
+    color: #060;
+}
+
+.optional {
+    font-size: 90%;
+}
+
+.versionmodified {
+    font-style: italic;
+}
+
+.system-message {
+    background-color: #fda;
+    padding: 5px;
+    border: 3px solid red;
+}
+
+.footnote:target  {
+    background-color: #ffa
+}
+
+/* -- code displays --------------------------------------------------------- */
+
+td.linenos pre {
+    padding: 5px 0px;
+    border: 0;
+    background-color: transparent;
+    color: #aaa;
+}
+
+table.highlighttable {
+    margin-left: 0.5em;
+}
+
+table.highlighttable td {
+    padding: 0 0.5em 0 0.5em;
+}
+
+tt.descname {
+    background-color: transparent;
+    font-weight: bold;
+    font-size: 100%;
+}
+
+tt.descclassname {
+    background-color: transparent;
+}
+
+tt.xref, a tt {
+    background-color: transparent;
+    font-weight: bold;
+}
+
+h1 tt, h2 tt, h3 tt, h4 tt, h5 tt, h6 tt {
+    background-color: transparent;
+}
+
+/* Avoid clash with pygments */
+.MathJax .mo,
+.MathJax .mi {
+      color: inherit;
+  }
+

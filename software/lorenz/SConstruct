@@ -1,0 +1,6 @@
+cflags = '-std=gnu99 -O3 --pedantic -W -Wall -Winline -Werror \
+-Wstrict-prototypes -Wno-sign-conversion -Wshadow -Wpointer-arith -Wcast-qual \
+-Wcast-align -Wwrite-strings -Wnested-externs \
+-fshort-enums -fno-common'
+opt = Environment(CFLAGS = cflags + ' -DHAVE_INLINE=1') 
+opt.Program('sensitivity.c', LIBS=['m', 'gsl', 'gslcblas'])

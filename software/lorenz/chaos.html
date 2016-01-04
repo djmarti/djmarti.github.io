@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta name="generator" content= "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
+  <meta http-equiv="Content-Type" content= "text/html; charset=utf-8" />
+  <meta name="generator" content= "Docutils 0.12: http://docutils.sourceforge.net/" />
+  <title>Daniel Martí</title>
+  <script type="text/javascript" src=
+  "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+  <link rel="stylesheet" href="../../styles/mycss.css" type="text/css" />
+</head>
+
+<body>
+  <div class="document" id="daniel-marti">
+    <h1 class="nobar">Daniel Martí</h1>
+    <h1 id="subtitle">Random Stuff</h1>
+
+    <div class="content" id="lorenz-attractor">
+      <h2>Lorenz attractor</h2>
+
+      <div class="picture">
+        <a class="reference external image-reference" href=
+        "lorenz.jpg"><img alt="Lorenz attractor" class=
+        "align-right" src="lorenz_sm.jpg" style=
+        "width: 400px; height: 320px;" /></a>
+      </div>
+
+      <p>I once had to give an informal talk about chaos to
+      students of Arts. To illustrate the idea that chaotic systems
+      are sensitive to initial conditions, I generated a movie
+      showing the evolution of an ensemble of <span class=
+      "math">\(n=200\)</span> initial points according to the
+      <a class="reference external" href=
+      "http://en.wikipedia.org/wiki/Lorenz_attractor#Equations">Lorenz
+      equations</a>. The ensemble of points were normally
+      distributed around one particular point <span class=
+      "math">\((x_0,y_0,z_0)\)</span> with variance 1 in all
+      directions.</p>
+
+      <p>There are two versions of the animation:</p>
+
+      <ul class="simple">
+        <li>with camera motion [<a class="reference external" href=
+        "http://commons.wikimedia.org/wiki/File:Lorenz.ogv">Wikimedia
+        Commons:Lorenz.ogv</a>] [<a class="reference external"
+        href="lorenz1.ogv">ogg video (32MB)</a>]</li>
+
+        <li>without camera motion [<a class="reference external"
+        href=
+        "http://commons.wikimedia.org/wiki/File:Lorenz_divergence.ogv">Wikimedia
+        Commons:Lorenz_divergence.ogv</a>] [<a class=
+        "reference external" href="lorenz2.ogv">ogg video
+        (35MB)</a>]</li>
+      </ul>
+
+      <p>The set of source files used to generate the movie can be found in the archive
+      file <a class="reference external" href=
+      "lorenz.tar.gz">lorenz.tar.gz</a></p>
+
+      <p>Generating the movie was rather easy. It involved
+      three main steps:</p>
+
+      <ol class="arabic">
+        <li>
+          <p class="first">In the first step the <span class=
+          "math">\(n\)</span> trajectories were calculated
+          numerically with custom <a class="reference external"
+          href="http://en.wikipedia.org/wiki/C99">C99</a> code and
+          using the <a class="reference external" href=
+          "http://www.gnu.org/software/gsl">GNU Scientific
+          Library</a>. The program saves in a collection of files
+          (called <tt class="docutils literal">cloud_0001.dat</tt>,
+          <tt class="docutils literal">cloud_0002.dat</tt>, etc.)
+          the position of all the dots at different times. These
+          files contain, rather than just the coordinates in
+          <span class="math">\(\mathbf{R}^{3}\)</span>, a set of
+          directives in <a class="reference external" href=
+          "http://www.povray.org/documentation/view/3.6.1/124/">SDL
+          (Scene Description Language)</a>, which describe the
+          position and the visual properties of the spheres that we
+          use to represent the dots. The program also stores the
+          trajectory starting at <span class=
+          "math">\((x_0,y_0,z_0)\)</span> in a file called
+          <tt class="docutils literal">attractor.inc</tt>. This
+          particular trajectory serves as a reference frame for the
+          motion of the dots and is represented as a white wire
+          (actually a chain of spheres connected with
+          cylinders).</p>
+
+          <p><strong>Code</strong>: <a class="reference external"
+          href="sensitivity.c">sensitivity.c</a>, <a class=
+          "reference external" href="SConstruct">SConstruct</a>.
+          The code makes use of the GNU Scientific Library.
+          Execute</p>
+          <pre class="code shell literal-block">
+<span class="gp">$ </span>scons
+<span class="gp">$ </span>./sensitivity
+</pre>
+        </li>
+
+        <li>
+          <p class="first">In a second step we use the raytracer
+          <a class="reference external" href=
+          "http://www.povray.org">POV-Ray</a> to generate the
+          images. POV-Ray builds the image using the geometric
+          description of objects contained in the SDL directive
+          files created in the previous step.</p>
+
+          <p><strong>Code</strong>: <a class="reference external"
+          href="sensitivity.ini">sensitivity.ini</a>, <a class=
+          "reference external" href=
+          "sensitivity.pov">sensitivity.pov</a>. Run</p>
+          <pre class="code shell literal-block">
+<span class="gp">$ </span>povray -D sensitivity.ini
+</pre>
+        </li>
+
+        <li>
+          <p class="first">The movie was finally encoded using
+          <a class="reference external" href=
+          "http://ffmpeg.mplayerhq.hu/">ffmpeg</a>.</p>
+          <pre class="code shell literal-block">
+<span class=
+"gp">$ </span>fmpeg -i sensitivity%04d.png -b 5000k -maxrate 6000k -bufsize 15000k test.ogv
+</pre>
+        </li>
+      </ol>
+
+      <p>The code presented here is partly inspired by a figure in
+      <a class="reference external" href=
+      "http://www.amazon.com/Nonlinear-Dynamics-Chaos-Applications-Engineering/dp/0738204536">
+      Strogatz's book</a> (Plate 2), and by an <a class=
+      "reference external" href=
+      "http://www.mitchr.me/SS/lorenz2/">example from Mitch
+      Richling</a>.</p>
+    </div>
+
+<br />
+<br />
+    <p class="lastlink">[<a href="../../">Daniel Martí</a>] &nbsp;
+    [<a href="http://www.gnt.ens.fr/">Group for Neural
+    Theory</a>]</p>
+
+    <div class="foot">
+      Last modified 19 December 2013 by <a href="../../">Daniel
+      Martí</a>
+    </div>
+  </div>
+</body>
+</html>

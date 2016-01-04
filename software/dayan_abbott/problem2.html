@@ -1,0 +1,415 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org" />
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=utf-8" />
+  <meta name="generator" content=
+  "Docutils 0.12: http://docutils.sourceforge.net/" />
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+
+  <title>Chapter 1</title>
+  <script type="text/javascript" src=
+  "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  <link rel="stylesheet" href="../../styles/mycss_snippets.css"
+  type="text/css" />
+</head>
+
+<body>
+  <div class="document" id="chapter-1">
+    <h1 class="title">Chapter 1</h1>
+
+    <h2 class="subtitle" id="problem-2">Problem 2</h2>
+
+    <p><em>Add a refractory period to the Poisson spike generator
+    by allowing the firing rate to depend on time. Initially, set
+    the firing rate to a constant value,</em> <span class=
+    "math">\(r(t)=r_0\)</span>. <em>After every spike, set</em>
+    <span class="math">\(r(t)\)</span> <em>to 0, and then allow it
+    to recover exponentially back to</em> <span class=
+    "math">\(r_0\)</span> <em>with a time constant</em>
+    <span class="math">\(\tau_{\text{ref}}\)</span> <em>that
+    controls the refractory recovery rate. In other words,
+    have</em> <span class="math">\(r(t)\)</span> <em>obey the
+    equation</em></p>
+
+    <div class="math">
+      \begin{equation*} \tau_{\text{ref}} \frac{d}{dt}r = r_0 - r
+      \end{equation*}
+    </div>
+
+    <p><em>except immediately after a spike, when it is set to 0.
+    Plot the coefficient of variation as a function of</em>
+    <span class="math">\(\tau_{\text{ref}}\)</span> <em>over the
+    range</em> <span class="math">\(1\,\text{ms}\leq
+    \tau_{\text{ref}} \leq 20\, \text{ms}\)</span>, <em>and plot
+    interspike interval histograms for a few different values
+    of</em> <span class="math">\(\tau_{\text{ref}}\)</span> <em>in
+    this range. Compute the Fano factor for spike counts obtained
+    over counting intervals ranging from 1 to 100 ms for the
+    case</em> <span class="math">\(\tau_{\text{ref}}=10
+    \,\text{ms}\)</span>.</p>
+
+    <p>We use the spike thinning technique (or rejection sampling)
+    described in page 30 of the book. We first generate the Poisson
+    train with rate <span class="math">\(r(t)=r_0\)</span>.</p>
+    <pre class="code python literal-block">
+<span class="kn">import</span> <span class=
+"nn">numpy</span> <span class="kn">as</span> <span class=
+"nn">np</span>
+<span class="n">T</span> <span class="o">=</span> <span class=
+"mi">100</span>            <span class=
+"c"># duration of the trial in seconds</span>
+<span class="n">tau_ref</span> <span class=
+"o">=</span> <span class="mf">1e-2</span>     <span class=
+"c"># refractory time scale (in seconds)</span>
+<span class="n">r0</span> <span class="o">=</span> <span class=
+"mi">100</span>           <span class=
+"c"># constant rate (in hertz)</span>
+<span class="n">N_spikes</span> <span class=
+"o">=</span> <span class="n">T</span> <span class=
+"o">*</span> <span class="n">r0</span>  <span class=
+"c"># average number of spikes per trial</span>
+<span class="n">isi_homog</span> <span class=
+"o">=</span> <span class="o">-</span><span class=
+"n">np</span><span class="o">.</span><span class=
+"n">log</span><span class="p">(</span><span class=
+"n">np</span><span class="o">.</span><span class=
+"n">random</span><span class="o">.</span><span class=
+"n">rand</span><span class="p">(</span><span class=
+"n">N_spikes</span><span class="p">))</span> <span class=
+"o">/</span> <span class="n">r0</span>  <span class=
+"c"># random ISIs at maximum rate</span>
+</pre>
+
+    <p>It is convenient to define a function that, given a sequence
+    of ISIs, returns the ISIs of the spike train incorporating
+    refractoriness. The function takes two arguments: the sequence
+    of ISIs of the homogeneous Poission train, and the recovery
+    time constant <span class=
+    "math">\(\tau_{\text{ref}}\)</span>.</p>
+    <pre class="code python literal-block">
+<span class="k">def</span> <span class=
+"nf">thin_isi</span><span class="p">(</span><span class=
+"n">isi_homog</span><span class="p">,</span> <span class=
+"n">tau_r</span><span class="p">):</span>
+    <span class=
+"sd">"""Given an homogeneous Poisson train defined by the sequence of
+    inter-event intervals `isi_homog`, return the corresponding sequence
+    when a a non-homogeneous  The first argument is a list or array of
+    inter-spike intervals, assumed to correspond to a homogeneous Poisson
+    train. The second argument is the time constant of the recovery
+    process, in the same units as the ISIs.
+    """</span>
+    <span class="n">sp_times_homog</span> <span class=
+"o">=</span> <span class="n">np</span><span class=
+"o">.</span><span class="n">cumsum</span><span class=
+"p">(</span><span class="n">isi_homog</span><span class=
+"p">)</span>  <span class=
+"c"># spike sequence at original rate</span>
+    <span class="n">sp_times</span> <span class=
+"o">=</span> <span class="p">[]</span>
+    <span class="n">sp_times</span><span class=
+"o">.</span><span class="n">append</span><span class=
+"p">(</span><span class="n">sp_times_homog</span><span class=
+"p">[</span><span class="mi">0</span><span class=
+"p">])</span>  <span class="c"># 1st spike</span>
+    <span class="n">last_spike</span> <span class=
+"o">=</span> <span class="n">sp_times</span><span class=
+"p">[</span><span class="o">-</span><span class=
+"mi">1</span><span class="p">]</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class=
+"n">np</span><span class="o">.</span><span class=
+"n">random</span><span class="o">.</span><span class=
+"n">rand</span><span class="p">(</span><span class=
+"n">N_spikes</span> <span class="o">-</span> <span class=
+"mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class=
+"p">,</span> <span class="n">t</span> <span class=
+"ow">in</span> <span class="nb">enumerate</span><span class=
+"p">(</span><span class="n">sp_times_homog</span><span class=
+"p">[</span><span class="mi">1</span><span class="p">:]):</span>
+        <span class="n">z</span> <span class=
+"o">=</span> <span class="mi">1</span> <span class=
+"o">-</span> <span class="n">np</span><span class=
+"o">.</span><span class="n">exp</span><span class=
+"p">(</span><span class="o">-</span><span class=
+"p">(</span><span class="n">t</span> <span class=
+"o">-</span> <span class="n">last_spike</span><span class=
+"p">)</span> <span class="o">/</span> <span class=
+"n">tau_r</span><span class="p">)</span>
+        <span class="c"># Thinning</span>
+        <span class="k">if</span> <span class=
+"p">(</span><span class="n">x</span><span class=
+"p">[</span><span class="n">i</span><span class=
+"p">]</span> <span class="o">&lt;</span> <span class=
+"n">z</span><span class="p">):</span>
+            <span class="n">sp_times</span><span class=
+"o">.</span><span class="n">append</span><span class=
+"p">(</span><span class="n">sp_times_homog</span><span class=
+"p">[</span><span class="n">i</span><span class=
+"o">+</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">last_spike</span> <span class=
+"o">=</span> <span class="n">sp_times</span><span class=
+"p">[</span><span class="o">-</span><span class=
+"mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+    <span class="n">sp_times</span> <span class=
+"o">=</span> <span class="n">np</span><span class=
+"o">.</span><span class="n">array</span><span class=
+"p">(</span><span class="n">sp_times</span><span class=
+"p">)</span>  <span class="c"># convert list to array</span>
+    <span class="n">isi</span> <span class=
+"o">=</span> <span class="n">np</span><span class=
+"o">.</span><span class="n">diff</span><span class=
+"p">(</span><span class="n">sp_times</span><span class=
+"p">)</span>        <span class=
+"c"># difference between successive spikes</span>
+    <span class="k">return</span> <span class="n">isi</span>
+
+<span class="n">isi_ref</span> <span class=
+"o">=</span> <span class="n">thin_isi</span><span class=
+"p">(</span><span class="n">isi_homog</span><span class=
+"p">,</span> <span class="n">tau_ref</span><span class="p">)</span>
+</pre>
+
+    <p>We can now plot the interspike interval histogram. Here we
+    compare the histogram of inter-spike intervals of two
+    processes: the homogeneous process and the process
+    incorporating the recovery mechanism with time constant
+    <span class=
+    "math">\(\tau_{\text{ref}}=10\,\text{ms}\)</span>.</p>
+    <pre class="code python literal-block">
+<span class="c"># Plot ISI histograms</span>
+<span class="kn">import</span> <span class=
+"nn">matplotlib.pyplot</span> <span class=
+"kn">as</span> <span class="nn">plt</span>
+<span class="n">n_bins</span> <span class="o">=</span> <span class=
+"mi">60</span>
+<span class="n">xmin</span><span class="p">,</span> <span class=
+"n">xmax</span> <span class="o">=</span> <span class=
+"mi">0</span><span class="p">,</span> <span class=
+"mf">0.8</span> <span class="o">*</span> <span class=
+"n">isi_ref</span><span class="o">.</span><span class=
+"n">max</span><span class="p">()</span>
+<span class="n">bins</span> <span class="o">=</span> <span class=
+"n">np</span><span class="o">.</span><span class=
+"n">linspace</span><span class="p">(</span><span class=
+"n">xmin</span><span class="p">,</span> <span class=
+"n">xmax</span><span class="p">,</span> <span class=
+"n">n_bins</span><span class="p">,</span> <span class=
+"n">endpoint</span><span class="o">=</span><span class=
+"bp">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class=
+"n">hist</span><span class="p">(</span><span class=
+"n">isi_homog</span><span class="p">,</span> <span class=
+"n">bins</span><span class="p">,</span> <span class=
+"n">normed</span><span class="o">=</span><span class=
+"mi">1</span><span class="p">,</span> <span class=
+"n">facecolor</span><span class="o">=</span><span class=
+"s">'red'</span><span class="p">,</span> <span class=
+"n">alpha</span><span class="o">=</span><span class=
+"mf">0.6</span><span class="p">)</span>
+<span class="n">isi_ref</span> <span class=
+"o">=</span> <span class="n">thin_isi</span><span class=
+"p">(</span><span class="n">isi_homog</span><span class=
+"p">,</span> <span class="n">tau_ref</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class=
+"n">hist</span><span class="p">(</span><span class=
+"n">isi_ref</span><span class="p">,</span> <span class=
+"n">bins</span><span class="p">,</span> <span class=
+"n">normed</span><span class="o">=</span><span class=
+"mi">1</span><span class="p">,</span> <span class=
+"n">facecolor</span><span class="o">=</span><span class=
+"s">'blue'</span><span class="p">,</span> <span class=
+"n">alpha</span><span class="o">=</span><span class=
+"mf">0.6</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class=
+"n">xlabel</span><span class="p">(</span><span class=
+"s">"Interspike interval (s)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class=
+"n">setp</span><span class="p">(</span><span class=
+"n">plt</span><span class="o">.</span><span class=
+"n">gca</span><span class="p">(),</span> <span class=
+"s">'yticklabels'</span><span class="p">,</span> <span class=
+"p">[])</span>  <span class=
+"c"># remove ticklabels on y axis</span>
+</pre><img alt=
+"Histogram of the interspike-intervals of the homogeneous Poisson train at maximum rate (red) and the one obtained after rejection sampling (blue)."
+    src="histograms.png" style="width: 700px; height: 400px;" />
+
+    <p>The dependence of the CV on the recovery time constant can
+    now be plotted easily.</p>
+    <pre class="code python literal-block">
+<span class="c"># Plot CV versus recovery time constant</span>
+<span class="n">taus</span> <span class="o">=</span> <span class=
+"n">np</span><span class="o">.</span><span class=
+"n">linspace</span><span class="p">(</span><span class=
+"mf">1e-3</span><span class="p">,</span> <span class=
+"mf">2e-2</span><span class="p">,</span> <span class=
+"mi">50</span><span class="p">)</span>
+<span class="n">cvs</span> <span class="o">=</span> <span class=
+"n">np</span><span class="o">.</span><span class=
+"n">zeros_like</span><span class="p">(</span><span class=
+"n">taus</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class=
+"p">,</span> <span class="n">tau</span> <span class=
+"ow">in</span> <span class="nb">enumerate</span><span class=
+"p">(</span><span class="n">taus</span><span class="p">):</span>
+    <span class=
+"c"># Generate a new point process for each tau_ref</span>
+    <span class="n">isi_homog</span> <span class=
+"o">=</span> <span class="o">-</span><span class=
+"n">np</span><span class="o">.</span><span class=
+"n">log</span><span class="p">(</span><span class=
+"n">np</span><span class="o">.</span><span class=
+"n">random</span><span class="o">.</span><span class=
+"n">rand</span><span class="p">(</span><span class=
+"n">N_spikes</span><span class="p">))</span> <span class=
+"o">/</span> <span class="n">r0</span>
+    <span class="n">isi</span> <span class=
+"o">=</span> <span class="n">thin_isi</span><span class=
+"p">(</span><span class="n">isi_homog</span><span class=
+"p">,</span> <span class="n">tau</span><span class="p">)</span>
+    <span class="n">cvs</span><span class="p">[</span><span class=
+"n">i</span><span class="p">]</span> <span class=
+"o">=</span> <span class="n">np</span><span class=
+"o">.</span><span class="n">std</span><span class=
+"p">(</span><span class="n">isi</span><span class=
+"p">)</span> <span class="o">/</span> <span class=
+"n">np</span><span class="o">.</span><span class=
+"n">mean</span><span class="p">(</span><span class=
+"n">isi</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class=
+"n">plot</span><span class="p">(</span><span class=
+"n">taus</span><span class="p">,</span> <span class=
+"n">cvs</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class=
+"n">xlabel</span><span class="p">(</span><span class=
+"s">"refractory time constant (s)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class=
+"n">ylabel</span><span class="p">(</span><span class=
+"s">"CV"</span><span class="p">)</span>
+</pre><img alt=
+"Dependence of the coefficient of variation of the spike train on the recovery time constant of the refractory mechanism."
+    src="cv_vs_tau.png" style="width: 500px; height: 300px;" />
+
+    <p>We can also plot the spike train before and after
+    thinning</p>
+    <pre class="code python literal-block">
+<span class="c"># Define spikes times</span>
+<span class="n">sp_times_max</span> <span class=
+"o">=</span> <span class="n">np</span><span class=
+"o">.</span><span class="n">cumsum</span><span class=
+"p">(</span><span class="n">isi_homog</span><span class=
+"p">)</span>
+<span class="n">isi_ref</span> <span class=
+"o">=</span> <span class="n">thin_isi</span><span class=
+"p">(</span><span class="n">isi_homog</span><span class=
+"p">,</span> <span class="mf">0.01</span><span class=
+"p">)</span>  <span class="c"># tau = 10 ms</span>
+<span class="n">sp_times_ref</span> <span class=
+"o">=</span> <span class="n">np</span><span class=
+"o">.</span><span class="n">cumsum</span><span class=
+"p">(</span><span class="n">isi_ref</span><span class="p">)</span>
+
+<span class="c"># Plot spikes</span>
+<span class="n">plt</span><span class="o">.</span><span class=
+"n">clf</span><span class="p">()</span>
+<span class="n">tmin</span><span class="p">,</span> <span class=
+"n">tmax</span> <span class="o">=</span> <span class=
+"mf">0.0</span><span class="p">,</span> <span class=
+"mf">4.0</span>  <span class=
+"c"># look only the first 4s to avoid clutter</span>
+<span class="n">sp_t_ref</span> <span class=
+"o">=</span> <span class="n">sp_times_ref</span><span class=
+"p">[</span><span class="n">sp_times_ref</span> <span class=
+"o">&lt;</span> <span class="n">tmax</span><span class=
+"p">]</span>  <span class="c"># chop thinned spike train,</span>
+<span class="n">sp_t_max</span> <span class=
+"o">=</span> <span class="n">sp_times_max</span><span class=
+"p">[</span><span class="n">sp_times_max</span> <span class=
+"o">&lt;</span> <span class="n">tmax</span><span class=
+"p">]</span>  <span class="c"># .. and the homogeneous one.</span>
+<span class="n">plt</span><span class="o">.</span><span class=
+"n">vlines</span><span class="p">(</span><span class=
+"n">sp_t_ref</span><span class="p">,</span> <span class=
+"mi">0</span><span class="p">,</span> <span class=
+"mi">1</span><span class="p">,</span> <span class=
+"s">'b'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class=
+"n">vlines</span><span class="p">(</span><span class=
+"n">sp_t_max</span><span class="p">,</span> <span class=
+"mi">1</span><span class="p">,</span> <span class=
+"mi">2</span><span class="p">,</span> <span class=
+"s">'r'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class=
+"n">setp</span><span class="p">(</span><span class=
+"n">plt</span><span class="o">.</span><span class=
+"n">gca</span><span class="p">(),</span> <span class=
+"s">'yticklabels'</span><span class="p">,</span> <span class=
+"p">[])</span>  <span class=
+"c"># Remove ticklabels on y axis</span>
+<span class="n">plt</span><span class="o">.</span><span class=
+"n">setp</span><span class="p">(</span><span class=
+"n">plt</span><span class="o">.</span><span class=
+"n">gca</span><span class="p">(),</span> <span class=
+"s">'yticks'</span><span class="p">,</span> <span class=
+"p">[])</span>       <span class="c"># ..and ticks</span>
+<span class="n">plt</span><span class="o">.</span><span class=
+"n">xlabel</span><span class="p">(</span><span class=
+"s">'time (s)'</span><span class="p">)</span>
+</pre><img alt=
+"Original spike train firing at maximum rate (top) and the spike train derived from it applying a rejection sampling method (bottom)."
+    src="spikes.png" style="width: 800px; height: 200px;" />
+
+    <div class="section" id="fine-tuning-of-figure-settings">
+      <h1>Fine tuning of figure settings</h1>
+
+      <p>The following lines are rather uninteresting. I just post
+      them as a reminder of how to save figures with a particular
+      size in pixels, something that I find inexplicably painful to
+      do in <a class="reference external" href=
+      "http://matplotlib.sourceforge.net/">matplotlib</a>.</p>
+      <pre class="code python literal-block">
+<span class="n">h</span> <span class="o">=</span> <span class=
+"n">plt</span><span class="o">.</span><span class=
+"n">gcf</span><span class="p">()</span>               <span class=
+"c"># handler of the current picture</span>
+<span class="n">px_x</span><span class="p">,</span> <span class=
+"n">px_y</span> <span class="o">=</span> <span class=
+"mi">800</span><span class="p">,</span> <span class=
+"mi">500</span>       <span class="c"># size in pixels</span>
+<span class="n">dpi</span> <span class="o">=</span> <span class=
+"mi">100</span>                   <span class=
+"c"># dots per inch</span>
+<span class="n">h</span><span class="o">.</span><span class=
+"n">set_dpi</span><span class="p">(</span><span class=
+"n">dpi</span><span class="p">)</span>
+<span class="n">in_x</span><span class="p">,</span> <span class=
+"n">in_y</span> <span class="o">=</span> <span class=
+"n">np</span><span class="o">.</span><span class=
+"n">array</span><span class="p">([</span><span class=
+"n">px_x</span><span class="p">,</span> <span class=
+"n">px_y</span><span class="p">])</span> <span class=
+"o">/</span> <span class="n">dpi</span>
+<span class="n">h</span><span class="o">.</span><span class=
+"n">set_size_inches</span><span class="p">(</span><span class=
+"n">in_x</span><span class="p">,</span><span class=
+"n">in_y</span><span class="p">)</span>
+<span class="n">h</span><span class="o">.</span><span class=
+"n">savefig</span><span class="p">(</span><span class=
+"s">'whatever.png'</span><span class="p">)</span>
+</pre>
+    </div>
+  </div>
+</body>
+</html>
