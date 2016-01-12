@@ -39,7 +39,7 @@ div.document {
 div.address, div.phones {
     padding: 0;
     font-weight: normal;
-    line-height: 1.5;
+    line-height: 1.4;
     font-size: 90%;}
 
 div.address { margin: 0 0 1em 0;}
@@ -82,7 +82,7 @@ h1.nobar {
            margin-bottom: 0;
 	   margin-top: 0;
 	   padding-left: 3%;
-           padding-bottom: 0.4ex;
+           padding-bottom: 0.3ex;
            border: none;
            }
 h1#subtitle {
@@ -123,14 +123,14 @@ h3 { font-size: 120%;
 	   }
 
 p { margin: 0.8ex 0 1ex 0;
-    line-height: 1.6;
+    line-height: 1.4;
 }
 p.lastlink { margin-top: 3em;
              margin-bottom: 0.9ex;
              padding: 0.5em 1.2em;
 	     background: #eef;
              color: #111;
-             line-height: 1.1;
+             line-height: 1.4;
              font-size: 75%;
 	     border-bottom: 1px solid #999;}
 
@@ -164,7 +164,7 @@ ul.glued { margin-top: 0; }
 ul { list-style-image: url(item.png); }
 
 ul li, ol li { margin-bottom: 0.6em;    
-    line-height: 1.6;
+    line-height: 1.4;
     margin-top: 0.5em; }
 
 a {
@@ -221,7 +221,7 @@ span.article_title {
 
 span.article_au {
     font-size: 90%;
-    font-variant: small-caps;
+    /* font-variant: small-caps; */
 }
 span.article_pub {
     font-size: 90%;
